@@ -114,10 +114,10 @@ function analyzeSalesData(data, options) {
                 if (b.quantity !== a.quantity) {
                     return b.quantity - a.quantity;
                 }
-                if (a.sku < b.sku) {
+                if (a.sku > b.sku) {
                     return -1;
                 }
-                if (a.sku > b.sku) {
+                if (a.sku < b.sku) {
                     return 1;
                 }
                 return 0;
