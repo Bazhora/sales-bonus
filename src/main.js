@@ -108,17 +108,22 @@ function analyzeSalesData(data, options) {
     const totalSellers = sellersStats.length;
     const finalResult = sellersStats.map((seller, index) => {
         const bonus = calculateBonus(index, totalSellers, seller);
-                const topProducts = Object.entries(seller.products_sold)
+        const topProducts = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({ sku, quantity }))
             .sort((a, b) => {
                 if (b.quantity !== a.quantity) {
                     return b.quantity - a.quantity;
                 }
-                if (a.sku < b.sku) return -1;
-                if (a.sku > b.sku) return 1;
+                if (a.sku < b.sku) {
+                    return -1;
+                }
+                if (a.sku > b.sku) {
+                    return 1;
+                }
                 return 0;
             })
             .slice(0, 10);
+
 
         return {
             seller_id: seller.id,
