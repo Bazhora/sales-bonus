@@ -102,7 +102,12 @@ function analyzeSalesData(data, options) {
         }
     });
     // @TODO: Сортировка продавцов по прибыли
-    sellersStats.sort((a, b) => b.profit - a.profit);
+        sellersStats.sort((a, b) => {
+        if (b.profit !== a.profit) {
+            return b.profit - a.profit;
+        }
+        return a.id.localeCompare(b.id);
+    });
     // @TODO: Назначение премий на основе ранжирования
     // @TODO: Подготовка итоговой коллекции с нужными полями
     const totalSellers = sellersStats.length;
@@ -114,17 +119,11 @@ function analyzeSalesData(data, options) {
                 if (b.quantity !== a.quantity) {
                     return b.quantity - a.quantity;
                 }
-                if (a.sku > b.sku) {
-                    return -1;
-                }
-                if (a.sku < b.sku) {
-                    return 1;
-                }
+                if (a.sku < b.sku) return -1;
+                if (a.sku > b.sku) return 1;
                 return 0;
             })
             .slice(0, 10);
-
-
         return {
             seller_id: seller.id,
             name: seller.name,
