@@ -42,10 +42,14 @@ function calculateBonusByProfit(index, total, seller) {
  */
 function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
-    if (!data || !data.sellers || !data.purchase_records || !data.products) {
+        // Создаем переменную для поддержки обоих вариантов названий ключей в тестах
+    const people = data?.sellers || data?.customers;
+
+    // @TODO: Проверка входных данных
+    if (!data || !people || !data.purchase_records || !data.products) {
         throw new Error("Переданные коллекции данных отсутствуют или неполные");
     }
-    if (data.sellers.length === 0 || data.purchase_records.length === 0 || data.products.length === 0) {
+    if (people.length === 0 || data.purchase_records.length === 0 || data.products.length === 0) {
         throw new Error("Массивы данных не должны быть пустыми");
     }
     // @TODO: Проверка наличия опций
@@ -54,7 +58,8 @@ function analyzeSalesData(data, options) {
     }
     const { calculateRevenue, calculateBonus } = options;
     // @TODO: Подготовка промежуточных данных для сбора статистики
-    const sellersStats = data.sellers.map(seller => {
+    const sellersStats = people.map(seller => {
+
         return {
             id: seller.id,
             name: `${seller.first_name} ${seller.last_name}`,
@@ -103,10 +108,18 @@ function analyzeSalesData(data, options) {
     const totalSellers = sellersStats.length;
     const finalResult = sellersStats.map((seller, index) => {
         const bonus = calculateBonus(index, totalSellers, seller);
-        const topProducts = Object.entries(seller.products_sold)
+                const topProducts = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({ sku, quantity }))
-            .sort((a, b) => b.quantity - a.quantity)
+            .sort((a, b) => {
+                if (b.quantity !== a.quantity) {
+                    return b.quantity - a.quantity;
+                }
+                if (a.sku < b.sku) return -1;
+                if (a.sku > b.sku) return 1;
+                return 0;
+            })
             .slice(0, 10);
+
         return {
             seller_id: seller.id,
             name: seller.name,
