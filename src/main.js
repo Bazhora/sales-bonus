@@ -66,7 +66,7 @@ function analyzeSalesData(data, options) {
             revenue: 0,
             profit: 0,
             sales_count: 0,
-            products_sold: {} // Ключ объекта — артикул товара, значение — количество штук
+            products_sold: {}
         };
     });
     // @TODO: Индексация продавцов и товаров для быстрого доступа
@@ -137,4 +137,3 @@ function analyzeSalesData(data, options) {
 
   return finalResult;
 }
-
